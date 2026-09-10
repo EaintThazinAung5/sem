@@ -1,1 +1,1 @@
-[![A workflow for my Hello World App](https://github.com/EaintThazinAung5/sem/actions/workflows/main.yml/badge.svg)](https://github.com/EaintThazinAung5/sem/actions/workflows/main.yml)
+![workflow](https://github.com/<EaintThazinAung5>/<sem>/actions/workflows/main.yml/badge.svg)

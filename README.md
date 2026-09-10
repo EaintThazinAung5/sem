@@ -1,1 +1,1 @@
-![workflow](https://:WQgithub.com/<EaintThazinAung5>/<sem>/actions/workflows/main.yml/badge.svg)
+[![A workflow for my Hello World App](https://github.com/EaintThazinAung5/sem/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/EaintThazinAung5/sem/actions/workflows/main.yml)

@@ -1,2 +1,1 @@
-# DevOps Lab 1
-This repository contain Lab1 Development Environment Setup.
+[![A workflow for my Hello World App](https://github.com/EaintThazinAung5/sem/actions/workflows/main.yml/badge.svg)](https://github.com/EaintThazinAung5/sem/actions/workflows/main.yml)

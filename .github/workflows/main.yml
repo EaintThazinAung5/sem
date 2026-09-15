@@ -20,8 +20,8 @@ jobs:
       - name: Setup network
         run: |
           docker network create --driver bridge se-methods
-          docker pull mongo:7.0
-          docker run -d --name mongo-dbserver --network se-methods mongo:7.0
+          docker pull mongodb/mongodb-community-server:latest
+          docker run -d --name mongo-dbserver --network se-methods mongodb/mongodb-community-server:latest
 
       - name: Build with Maven
         run: mvn package

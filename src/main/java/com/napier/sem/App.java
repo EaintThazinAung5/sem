@@ -83,6 +83,12 @@ public class App
         }
     }
 
+    /**
+     * Gets an employee from the database.
+     *
+     * @param ID Employee number.
+     * @return Employee details, or null if there is an error.
+     */
     public Employee getEmployee(int ID)
     {
         try
@@ -113,7 +119,6 @@ public class App
             ResultSet rset = stmt.executeQuery(strSelect);
 
             // Return new employee if valid.
-            // Check one is returned
             if (rset.next())
             {
                 Employee emp = new Employee();
@@ -140,6 +145,11 @@ public class App
         }
     }
 
+    /**
+     * Displays an employee.
+     *
+     * @param emp Employee to display.
+     */
     public void displayEmployee(Employee emp)
     {
         if (emp != null)
@@ -157,6 +167,7 @@ public class App
 
     /**
      * Gets all the current employees and salaries.
+     *
      * @return A list of all employees and salaries, or null if there is an error.
      */
     public ArrayList<Employee> getAllSalaries()
@@ -201,6 +212,28 @@ public class App
         }
     }
 
+    /**
+     * Prints a list of employees.
+     *
+     * @param employees The list of employees to print.
+     */
+    public void printSalaries(ArrayList<Employee> employees)
+    {
+        // Print header
+        System.out.println(String.format("%-10s %-15s %-20s %-8s",
+                "Emp No", "First Name", "Last Name", "Salary"));
+
+        // Loop over all employees in the list
+        for (Employee emp : employees)
+        {
+            String emp_string =
+                    String.format("%-10s %-15s %-20s %-8s",
+                            emp.emp_no, emp.first_name, emp.last_name, emp.salary);
+
+            System.out.println(emp_string);
+        }
+    }
+
     public static void main(String[] args)
     {
         // Create new Application
@@ -212,8 +245,8 @@ public class App
         // Extract employee salary information
         ArrayList<Employee> employees = a.getAllSalaries();
 
-        // Test the size of the returned data - should be 240124
-        System.out.println(employees.size());
+        // Print employee salary information
+        a.printSalaries(employees);
 
         // Disconnect from database
         a.disconnect();

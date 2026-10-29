@@ -10,19 +10,24 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           submodules: recursive
 
       - name: Set up JDK 26
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: '26'
           distribution: temurin
           cache: maven
 
+      - name: Check Java and Maven
+        run: |
+          java -version
+          mvn -version
+
       - name: Unit Tests
-        run: mvn -Dtest=com.napier.sem.AppTest test
+        run: mvn -B -Dtest=com.napier.sem.AppTest test
 
       - name: Start MySQL Database
         run: docker compose up -d --build db
@@ -37,16 +42,17 @@ jobs:
             echo "Waiting for MySQL..."
             sleep 2
           done
+
           echo "MySQL did not become ready"
           docker compose logs db
           exit 1
 
       - name: Integration Tests
-        run: mvn -Dtest=com.napier.sem.AppIntegrationTest test
+        run: mvn -B -Dtest=com.napier.sem.AppIntegrationTest test
 
       - name: Generate JaCoCo Coverage Report
         run: |
-          mvn jacoco:report
+          mvn -B org.jacoco:jacoco-maven-plugin:0.8.15:report
           ls -l target/site/jacoco/
           test -f target/site/jacoco/jacoco.xml
 
@@ -60,7 +66,7 @@ jobs:
           fail_ci_if_error: true
 
       - name: Package Application
-        run: mvn package -DskipTests
+        run: mvn -B package -DskipTests
 
       - name: Run Docker Compose
         run: docker compose up --build --abort-on-container-exit

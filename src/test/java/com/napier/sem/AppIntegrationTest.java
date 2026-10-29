@@ -31,6 +31,24 @@ public class AppIntegrationTest
         assertEquals("Garigliano", emp.last_name);
     }
 
+    @Test
+    void testAddEmployee()
+    {
+        Employee emp = new Employee();
+        emp.emp_no = 500000;
+        emp.first_name = "Kevin";
+        emp.last_name = "Chalmers";
+
+        app.addEmployee(emp);
+
+        Employee result = app.getEmployee(500000);
+
+        assertNotNull(result, "New employee should exist in the database");
+        assertEquals(500000, result.emp_no);
+        assertEquals("Kevin", result.first_name);
+        assertEquals("Chalmers", result.last_name);
+    }
+
     @AfterAll
     static void cleanup()
     {

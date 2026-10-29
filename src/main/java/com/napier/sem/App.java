@@ -264,6 +264,51 @@ public class App
         return null;
     }
 
+
+
+    /**
+     * Adds a new employee to the database.
+     *
+     * @param emp Employee to add.
+     */
+    public void addEmployee(Employee emp)
+    {
+        if (emp == null)
+        {
+            System.out.println("Employee cannot be null");
+            return;
+        }
+
+        String sql =
+                "INSERT INTO employees " +
+                        "(emp_no, birth_date, first_name, last_name, gender, hire_date) " +
+                        "VALUES (?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement pstmt = con.prepareStatement(sql))
+        {
+            pstmt.setInt(1, emp.emp_no);
+            pstmt.setDate(2, java.sql.Date.valueOf("1990-01-01"));
+            pstmt.setString(3, emp.first_name);
+            pstmt.setString(4, emp.last_name);
+            pstmt.setString(5, "M");
+            pstmt.setDate(6, java.sql.Date.valueOf("2026-01-01"));
+
+            int rowsInserted = pstmt.executeUpdate();
+
+            if (rowsInserted > 0)
+            {
+                System.out.println("Employee added successfully");
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to add employee");
+        }
+    }
+
+
+
     /**
      * Displays employee details.
      *

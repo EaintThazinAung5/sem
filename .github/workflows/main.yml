@@ -1,23 +1,59 @@
-name: A workflow for my Hello World App
+
+name: DevOps Lab 7 - Integration Testing
+
 on: push
 
 jobs:
   build:
-    name: Hello world action
+    name: Test and Build Application
     runs-on: ubuntu-22.04
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           submodules: recursive
+
       - name: Set up JDK 26
         uses: actions/setup-java@v4
         with:
           java-version: '26'
-          distribution: 'temurin'
+          distribution: temurin
+          cache: maven
+
       - name: Unit Tests
         run: mvn -Dtest=com.napier.sem.AppTest test
-      - name: Package and Run docker compose
+
+      - name: Start MySQL Database
+        run: docker compose up -d --build db
+
+      - name: Wait for MySQL Database
         run: |
-          mvn package -DskipTests
-          docker compose up --abort-on-container-exit
+          for i in {1..30}; do
+            if docker compose exec -T db mysqladmin ping -h 127.0.0.1 -uroot -pexample --silent; then
+              echo "MySQL is ready"
+              exit 0
+            fi
+            echo "Waiting for MySQL..."
+            sleep 2
+          done
+          echo "MySQL did not become ready"
+          docker compose logs db
+          exit 1
+
+      - name: Integration Tests
+        run: mvn -Dtest=com.napier.sem.AppIntegrationTest test
+
+      - name: Package Application
+        run: mvn package -DskipTests
+
+      - name: Run Docker Compose
+        run: docker compose up --build --abort-on-container-exit
+
+      - name: Show Docker Logs on Failure
+        if: failure()
+        run: docker compose logs
+
+      - name: Stop Containers
+        if: always()
+        run: docker compose down

@@ -9,8 +9,11 @@ public class App
 
     /**
      * Connects to the MySQL database.
+     *
+     * @param location Database hostname and port
+     * @param delay Delay in milliseconds before each connection attempt
      */
-    public void connect()
+    public void connect(String location, int delay)
     {
         try
         {
@@ -19,7 +22,7 @@ public class App
         catch (ClassNotFoundException e)
         {
             System.out.println("Could not load SQL driver");
-            System.exit(-1);
+            return;
         }
 
         int retries = 10;
@@ -30,20 +33,23 @@ public class App
 
             try
             {
-                Thread.sleep(30000);
+                Thread.sleep(delay);
 
                 con = DriverManager.getConnection(
-                        "jdbc:mysql://db:3306/employees?allowPublicKeyRetrieval=true&useSSL=false",
+                        "jdbc:mysql://" + location
+                                + "/employees?allowPublicKeyRetrieval=true&useSSL=false",
                         "root",
                         "example"
                 );
 
                 System.out.println("Successfully connected");
-                break;
+                return;
             }
             catch (SQLException e)
             {
-                System.out.println("Failed to connect to database attempt " + i);
+                System.out.println(
+                        "Failed to connect to database attempt " + (i + 1)
+                );
                 System.out.println(e.getMessage());
             }
             catch (InterruptedException e)
@@ -53,6 +59,8 @@ public class App
                 return;
             }
         }
+
+        System.out.println("Could not connect after " + retries + " attempts.");
     }
 
     /**
@@ -414,7 +422,30 @@ public class App
     public static void main(String[] args)
     {
         App app = new App();
-        app.connect();
+
+        String location = "localhost:33060";
+        int delay = 1000;
+
+        if (args.length >= 2)
+        {
+            location = args[0];
+
+            try
+            {
+                delay = Integer.parseInt(args[1]);
+            }
+            catch (NumberFormatException e)
+            {
+                System.out.println("Invalid delay value.");
+                return;
+            }
+        }
+        else if (args.length == 1)
+        {
+            location = args[0];
+        }
+
+        app.connect(location, delay);
 
         if (app.con == null)
         {
@@ -431,8 +462,9 @@ public class App
             if (dept.manager != null)
             {
                 System.out.println(
-                        "Manager: " + dept.manager.first_name + " " +
-                                dept.manager.last_name);
+                        "Manager: " + dept.manager.first_name + " "
+                                + dept.manager.last_name
+                );
             }
 
             ArrayList<Employee> employees =

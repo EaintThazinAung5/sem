@@ -26,9 +26,6 @@ jobs:
           java -version
           mvn -version
 
-      - name: Unit Tests
-        run: mvn -B -Dtest=com.napier.sem.AppTest test
-
       - name: Start MySQL Database
         run: docker compose up -d --build db
 
@@ -42,31 +39,24 @@ jobs:
             echo "Waiting for MySQL..."
             sleep 2
           done
-
           echo "MySQL did not become ready"
           docker compose logs db
           exit 1
 
-      - name: Integration Tests
-        run: mvn -B -Dtest=com.napier.sem.AppIntegrationTest test
-
-      - name: Generate JaCoCo Coverage Report
+      - name: Run Unit Tests, Integration Tests and Generate Coverage
         run: |
-          mvn -B org.jacoco:jacoco-maven-plugin:0.8.15:report
-          ls -l target/site/jacoco/
+          mvn -B clean verify -Dtest=com.napier.sem.AppTest,com.napier.sem.AppIntegrationTest
+          test -f target/jacoco.exec
           test -f target/site/jacoco/jacoco.xml
+          echo "JaCoCo coverage report generated successfully."
 
       - name: Upload Coverage to Codecov
         uses: codecov/codecov-action@v5
         with:
           files: ./target/site/jacoco/jacoco.xml
-          token: ${{ secrets.CODECOV_TOKEN }}
           flags: integration-tests
           verbose: true
           fail_ci_if_error: true
-
-      - name: Package Application
-        run: mvn -B package -DskipTests
 
       - name: Run Docker Compose
         run: docker compose up --build --abort-on-container-exit

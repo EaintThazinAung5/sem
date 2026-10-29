@@ -302,8 +302,7 @@ public class App
         }
         catch (SQLException e)
         {
-            System.out.println(e.getMessage());
-            System.out.println("Failed to add employee");
+            throw new RuntimeException("Failed to add employee", e);
         }
     }
 

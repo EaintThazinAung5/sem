@@ -35,16 +35,16 @@ public class AppIntegrationTest
     void testAddEmployee()
     {
         Employee emp = new Employee();
-        emp.emp_no = 500000;
+        emp.emp_no = (int) (System.currentTimeMillis() % 1000000) + 1000000;
         emp.first_name = "Kevin";
         emp.last_name = "Chalmers";
 
         app.addEmployee(emp);
 
-        Employee result = app.getEmployee(500000);
+        Employee result = app.getEmployee(emp.emp_no);
 
         assertNotNull(result, "New employee should exist in the database");
-        assertEquals(500000, result.emp_no);
+        assertEquals(emp.emp_no, result.emp_no);
         assertEquals("Kevin", result.first_name);
         assertEquals("Chalmers", result.last_name);
     }

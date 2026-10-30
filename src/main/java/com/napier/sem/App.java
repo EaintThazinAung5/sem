@@ -265,8 +265,6 @@ public class App
         return null;
     }
 
-
-
     /**
      * Adds a new employee to the database.
      *
@@ -306,8 +304,6 @@ public class App
             throw new RuntimeException("Failed to add employee", e);
         }
     }
-
-
 
     /**
      * Displays employee details.
@@ -397,7 +393,7 @@ public class App
      *
      * @return Employees and salaries, or null if an error occurs.
      */
-    public ArrayList<Employee> getAllSalaries()
+    public List<Employee> getAllSalaries()
     {
         String sql =
                 "SELECT e.emp_no, e.first_name, e.last_name, s.salary " +
@@ -406,7 +402,7 @@ public class App
                         "WHERE s.to_date = '9999-01-01' " +
                         "ORDER BY e.emp_no ASC";
 
-        ArrayList<Employee> employees = new ArrayList<>();
+        List<Employee> employees = new ArrayList<>();
 
         try (Statement stmt = con.createStatement();
              ResultSet rset = stmt.executeQuery(sql))
@@ -437,7 +433,7 @@ public class App
      *
      * @param employees Employees to print.
      */
-    public void printSalaries(ArrayList<Employee> employees)
+    public void printSalaries(List<Employee> employees)
     {
         // Check employees is not null
         if (employees == null)
@@ -512,7 +508,8 @@ public class App
                 );
             }
 
-            ArrayList<Employee> employees =
+            // ဒီနေရာမှာ ArrayList ကို List လို့ ပြောင်းထားပါတယ်
+            List<Employee> employees =
                     app.getSalariesByDepartment(dept);
 
             app.printSalaries(employees);

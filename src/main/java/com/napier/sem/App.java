@@ -2,6 +2,7 @@ package com.napier.sem;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class App
 {
@@ -342,9 +343,9 @@ public class App
      * @param dept Department to report on.
      * @return Employees and salaries, or null if an error occurs.
      */
-    public ArrayList<Employee> getSalariesByDepartment(Department dept)
+    public List<Employee> getSalariesByDepartment(Department dept)
     {
-        ArrayList<Employee> employees = new ArrayList<>();
+        List<Employee> employees = new ArrayList<>();
 
         if (dept == null)
         {
